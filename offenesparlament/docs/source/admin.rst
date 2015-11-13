@@ -13,6 +13,7 @@ Besides the usual CRUD-Interfaces, which should only be used for debugging purpo
 #. Administrations
 #. Pre-Laws
 #. Laws
+#. Petitions
 
 The order of the scrapers above represents their dependencies on each other; for instance, scanning laws includes votes and speeches by Persons, and relies on the Person in question having been scraped before. To be sure, the order above should be maintained in all scraping processes.
 
