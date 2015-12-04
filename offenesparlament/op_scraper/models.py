@@ -39,6 +39,20 @@ class LegislativePeriod(models.Model):
 
         return rep_str
 
+    @property
+    def facet_repr(self):
+        if self.end_date:
+            rep_str = "{} - {} ({})".format(
+                self.start_date,
+                self.end_date,
+                self.roman_numeral)
+        else:
+            rep_str = "aktuell seit {} ({})".format(
+                self.start_date,
+                self.roman_numeral)
+
+        return rep_str
+
 
 class Phase(models.Model):
 
@@ -417,6 +431,10 @@ class Person(models.Model, ParlIDMixIn):
     def llps_roman(self):
         return [llp.roman_numeral for llp in self.llps]
 
+    @property
+    def llps_facet(self):
+        return [llp.facet_repr for llp in self.llps]
+
     def get_latest_mandate(self):
         """
         Returns the most recent mandate a person had.
@@ -434,7 +452,8 @@ class Person(models.Model, ParlIDMixIn):
 
     @property
     def full_name_urlsafe(self):
-        return re.sub(u'[^a-zA-Z0-9ßöäüÖÄÜ]+', '-', self.full_name)
+        base_name = self.full_name or self.reversed_name
+        return re.sub(u'[^a-zA-Z0-9ßöäüÖÄÜ]+', '-', base_name)
 
     @property
     def most_recent_function_or_occupation(self):
@@ -509,7 +528,6 @@ class User(models.Model):
             self.save()
 
 
-
 class SubscribedContent(models.Model):
 
     """
@@ -571,7 +589,9 @@ class Petition(models.Model):
         "self", blank=True, null=True, related_name='redistribution')
 
     def __unicode__(self):
-        return u'{} eingebracht von {}'.format(self.law, self.creators.all())
+        return u'{} eingebracht von {}'.format(
+            self.law.title,
+            ", ".join([unicode(c) for c in self.creators.all()]))
 
     @property
     def full_signature_count(self):
@@ -602,7 +622,7 @@ class PetitionCreator(models.Model):
 
     def __unicode__(self):
         if not self.person is None:
-            return u'{}'.format(self.person)
+            return u'{}'.format(self.person.full_name)
         else:
             return u'{}'.format(self.full_name)
 

@@ -21,7 +21,7 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
     occupation = indexes.CharField(
         model_attr='occupation', faceted=True, null=True)
     party = indexes.CharField(model_attr='party', faceted=True, null=True)
-    llps = indexes.MultiValueField(model_attr='llps_roman', faceted=True)
+    llps = indexes.MultiValueField(model_attr='llps_facet', faceted=True)
 
     def get_model(self):
         return Person
@@ -31,10 +31,11 @@ class LawIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     parl_id = indexes.CharField(model_attr='parl_id')
 
-    internal_link = indexes.CharField(model_attr='slug')
+    internal_link = indexes.CharField(model_attr=u'slug')
     title = indexes.CharField(model_attr='title')
     description = indexes.CharField(model_attr='description')
-    category = indexes.CharField(model_attr='category__title', faceted=True)
+    category = indexes.CharField(
+        model_attr='category__title', faceted=True, null=True)
     llp = indexes.CharField(model_attr='llp_roman', faceted=True)
 
     # Related, aggregated and Multi-Value Fields

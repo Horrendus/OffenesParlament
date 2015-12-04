@@ -64,10 +64,9 @@ class BaseConfig(Configuration):
     GRAPPELLI_INDEX_DASHBOARD = 'op_scraper.op_scraper_dashboard.CustomIndexDashboard'
 
     # Haystack Configuration
-
     HAYSTACK_CONNECTIONS = {
         'default': {
-            'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+            'ENGINE': 'offenesparlament.search_backend.FuzzyElasticsearchSearchEngine',
             'URL': 'http://localhost:9200/',
             'INDEX_NAME': 'haystack',
         },
@@ -100,10 +99,21 @@ class BaseConfig(Configuration):
     # Database
     # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     }
+    # }
+
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'op',
+            'USER': 'op',
+            'PASSWORD': 'secret',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
         }
     }
 

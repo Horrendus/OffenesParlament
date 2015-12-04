@@ -36,7 +36,7 @@ from op_scraper.models import Opinion
 class PreLawsSpider(BaseSpider):
     BASE_URL = "{}/{}".format(BASE_HOST, "PAKT/MESN/filter.psp")
 
-    # LLP = range(24, 26)
+    ALLOWED_LLPS = range(20, 26)
 
     URLOPTIONS = {
         'view': 'RSS',
@@ -56,6 +56,12 @@ class PreLawsSpider(BaseSpider):
 
     def __init__(self, **kw):
         super(PreLawsSpider, self).__init__(**kw)
+        print "Initializing PRE_LAW scraper with keywords:{}".format(kw)
+        if 'llp' in kw:
+            try:
+                self.LLP = [int(kw['llp'])]
+            except:
+                pass
 
         # add at least a default URL for testing
         self.start_urls = self.get_urls()

@@ -12,10 +12,10 @@ urlpatterns = patterns(
     url(r'^$', base_views.index, name='home'),
     url(r'^wir/$', base_views.about, name='about'),
     url(r'^personen/$', base_views.person_list, name='person_list'),
-    url(r'^personen/(?P<parl_id>.{1,30})/(?P<name>.+)/$',
+    url(r'^personen/(?P<parl_id>.{1,60})/(?P<name>.+)/$',
         base_views.person_detail, name='person_detail'),
     url(r'^gesetze/$', base_views.gesetze_list, name='laws_list'),
-    url(r'^gesetze/(?P<ggp>.{1,30})/(?P<parl_id>.{1,30})/$',
+    url(r'^gesetze/(?P<ggp>.{1,30})/(?P<parl_id>.{1,60})/$',
         base_views.gesetz_detail, name='gesetz_detail'),
     url(r'^schlagworte/$', base_views.keyword_list, name='keyword_list'),
     url(r'^schlagworte/(?P<keyword>.+)/$',
@@ -61,6 +61,8 @@ urlpatterns = patterns(
     url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/scrape/(?P<spider_name>.{1,30})',
         admin_views.trigger_scrape, name='scrape_llp'),
+    url(r'^admin/elastic/update',
+        admin_views.trigger_reindex, name='update_index'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

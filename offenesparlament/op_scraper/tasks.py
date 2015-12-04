@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from scrapy.crawler import CrawlerProcess
+from haystack.management.commands import update_index
 
 from celery import shared_task
 
@@ -13,10 +14,16 @@ DEFAULT_CRAWLER_OPTIONS = {
 
 
 @shared_task
-def scrape(spider):
+def scrape(spider, **kwargs):
     with transaction.atomic(), reversion.create_revision():
         process = CrawlerProcess(DEFAULT_CRAWLER_OPTIONS)
-        process.crawl(spider)
+        process.crawl(spider, **kwargs)
         # the script will block here until the crawling is finished
         process.start()
+    return
+
+
+@shared_task
+def update_elastic():
+    update_index.Command().handle()
     return
